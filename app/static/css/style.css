@@ -1,0 +1,241 @@
+body { 
+    font-family: "Segoe UI", sans-serif; 
+    background: #f2f4f8; 
+    margin: 0; 
+    padding: 0; 
+    color: #333; /* Color de texto base */
+}
+
+/* Contenedor principal para centrar el contenido */
+.content {
+    width: 95%;         /* <-- CAMBIO: Usa el 95% del ancho disponible */
+    max-width: 1800px;    /* <-- CAMBIO: Un límite máximo mucho más generoso */
+    margin: 20px auto;  /* Mantiene el centrado horizontal */
+    padding: 0;         /* <-- CAMBIO: Eliminamos el padding extra aquí */
+    box-sizing: border-box;
+}
+
+.header { 
+    background: #004080; 
+    padding: 15px; 
+    text-align: center; 
+    margin-bottom: 20px; 
+}
+.header a { 
+    color: #fff; 
+    margin: 0 20px; 
+    text-decoration: none; 
+    font-weight: 600; 
+}
+.header a:hover { 
+    text-decoration: underline; 
+}
+
+h2 { 
+    text-align: center; 
+    color: #004080; 
+    font-weight: 700; 
+    margin: 25px 0; 
+}
+
+/* Formularios - Ajustado para centrar y respetar el max-width del content */
+form { 
+    background: white; 
+    padding: 25px; 
+    border-radius: 10px; 
+    max-width: 650px; /* Un poco más pequeño que el .content para verse bien */
+    margin: 20px auto; /* Centra el formulario */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+}
+
+label { 
+    display: block; 
+    margin-top: 12px; 
+    font-weight: 600; 
+    color: #333; 
+}
+input, select { 
+    width: 100%; 
+    padding: 10px; 
+    margin-top: 6px; 
+    border-radius: 6px; 
+    border: 1px solid #ccc; 
+    box-sizing: border-box; 
+    font-size: 15px; 
+}
+button { 
+    margin-top: 20px; 
+    padding: 12px; 
+    background: #004080; 
+    color: white; 
+    border: none; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    font-weight: 600; 
+    font-size: 16px; 
+    width: 100%; 
+    transition: background-color 0.3s ease; /* Suaviza el hover */
+}
+button:hover { 
+    background: #0066cc; 
+}
+
+/* Alertas - Usan el max-width del content */
+.alert { 
+    padding: 15px; 
+    margin-bottom: 20px; 
+    border: 1px solid transparent; 
+    border-radius: 4px; 
+    max-width: 650px; /* Igual que el formulario para consistencia */
+    margin: 20px auto; 
+    font-weight: 600; 
+}
+.alert.success { 
+    color: #155724; 
+    background-color: #d4edda; 
+    border-color: #c3e6cb; 
+}
+.alert.error { 
+    color: #721c24; 
+    background-color: #f8d7da; 
+    border-color: #f5c6cb; 
+}
+
+/* Contenedor de la tabla - Se centra dentro del .content */
+.table-container { 
+    overflow-x: auto; /* Permite scroll horizontal si la tabla es muy ancha */
+    background: white; 
+    border-radius: 10px; 
+    padding: 15px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+    max-width: 100%; /* Ocupa el 100% del .content */
+    margin: 20px auto; /* Centra dentro del .content */
+}
+table { 
+    border-collapse: collapse; 
+    width: 100%; 
+    font-size: 14px; 
+}
+th, td { 
+    border: 1px solid #ddd; 
+    padding: 10px; 
+    text-align: left; 
+    vertical-align: top; /* Alinea el texto en la parte superior de la celda */
+}
+th { 
+    background: #004080; 
+    color: white; 
+    font-weight: 600; 
+    white-space: nowrap; /* Evita que los encabezados se rompan en varias líneas */
+}
+tr:nth-child(even) td { 
+    background: #f9fbfd; 
+}
+tr:hover td { 
+    background: #e6f0ff; 
+}
+
+/* Formulario de búsqueda - Se centra dentro del .content */
+.search-form { 
+    max-width: 600px; 
+    margin: 0 auto 20px auto; 
+    background: white; 
+    padding: 20px; 
+    border-radius: 8px; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
+}
+.search-form label {
+    margin-top: 0; /* Ajusta el margen de la etiqueta dentro del form flex */
+}
+.search-form input[type=text] { 
+    flex: 1; /* Permite que el input ocupe el espacio disponible */
+}
+
+p.message {
+    text-align:center;
+    font-style:italic;
+    color:#666;
+    margin-top: 20px;
+}
+
+/* Media Queries para responsividad */
+@media (max-width: 768px) {
+    .header a {
+        margin: 0 10px;
+    }
+    .content {
+        padding: 0 10px;
+    }
+    h2 {
+        margin: 20px 0;
+        font-size: 22px;
+    }
+    .search-form {
+        flex-direction: column; /* Apila los elementos en pantallas pequeñas */
+        align-items: stretch;
+        max-width: 95%; /* Ajusta el ancho para móviles */
+    }
+    .search-form label {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 5px;
+    }
+    .search-form button {
+        margin-top: 10px;
+    }
+    form, .alert {
+        max-width: 95%; /* Ajusta el ancho para móviles */
+        padding: 15px;
+    }
+    th, td {
+        padding: 8px;
+        font-size: 12px;
+    }
+}
+
+/* ... (todo tu CSS anterior va aquí) ... */
+
+/* --- NUEVOS ESTILOS PARA LOS ICONOS DE ACCIONES --- */
+.actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Espacio entre íconos */
+    border-left: 1px solid #ddd;
+}
+
+.action-icon {
+    font-size: 20px; /* Tamaño del ícono */
+    text-decoration: none;
+    color: #333;
+    transition: transform 0.2s ease;
+}
+
+.action-icon:hover {
+    transform: scale(1.2); /* Efecto de zoom al pasar el mouse */
+}
+
+.action-icon-btn {
+    font-size: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    color: #333;
+    transition: transform 0.2s ease;
+}
+
+.action-icon-btn:hover {
+    transform: scale(1.2);
+}
+
+.actions form {
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    background: none;
+}

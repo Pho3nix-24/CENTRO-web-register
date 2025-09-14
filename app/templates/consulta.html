@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Consulta de Pagos{% endblock %}
+
+{% block content %}
+    <h2>Consulta de Estado de Pago</h2>
+
+    <form method="GET" action="{{ url_for('consulta') }}" class="search-form">
+        <label for="dni_consulta" style="white-space:nowrap;">DNI o Cliente:</label>
+        <input type="text" id="dni_consulta" name="query" required value="{{ request.args.get('query', '') }}" />
+        <button type="submit">Buscar</button>
+    </form>
+
+    {% if resultados %}
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        {% for h in headers %}
+                            <th>{{ h }}</th>
+                        {% endfor %}
+                        <th>ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fila, idx in resultados %}
+                        <tr>
+                            {% for celda in fila %}
+                                <td>{{ celda if celda is not none else '' }}</td>
+                            {% endfor %}
+                            <td class="actions">
+                                <a href="{{ url_for('actualizar_pago', fila_idx=idx, query=request.args.get('query', '')) }}" class="action-icon" title="Actualizar Pago">🔄</a>
+                                <a href="{{ url_for('editar', fila_idx=idx, query=request.args.get('query', '')) }}" class="action-icon" title="Editar Registro">✏️</a>
+                                <form action="{{ url_for('eliminar') }}" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este registro?');">
+                                    <input type="hidden" name="fila_idx" value="{{ idx }}">
+                                    <input type="hidden" name="query" value="{{ request.args.get('query', '') }}">
+                                    <button type="submit" class="action-icon-btn" title="Eliminar Registro">🗑️</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% elif resultados is not none %}
+        <p class="message">No se encontraron registros para tu búsqueda.</p>
+    {% endif %}
+
+{% endblock %}
