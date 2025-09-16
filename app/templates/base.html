@@ -4,13 +4,14 @@
     <meta charset="UTF-8" />
     <title>{% block title %}Registro Docente{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}" type="image/png">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/logo.png') }}">
 </head>
 <body>
     <div class="header">
         <a href="{{ url_for('index') }}">Registrar</a>
         <a href="{{ url_for('consulta') }}">Consultar</a>
-        <a href="{{ url_for('descargar') }}">Descargar Excel</a>
+        <a href="{{ url_for('reportes') }}">Reportes</a> <a href="{{ url_for('descargar') }}">Descargar Excel</a>
+        <a href="{{ url_for('logout') }}" class="logout-btn">Cerrar Sesión</a>
     </div>
     
     <div class="content">
@@ -25,7 +26,6 @@
         {% block content %}{% endblock %}
     </div>
 
-    {# Este bloque es para estilos adicionales de páginas específicas #}
     {% block styles %}{% endblock %}
 </body>
 </html>

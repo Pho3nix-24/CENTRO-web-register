@@ -197,9 +197,6 @@ p.message {
     }
 }
 
-/* ... (todo tu CSS anterior va aquí) ... */
-
-/* --- NUEVOS ESTILOS PARA LOS ICONOS DE ACCIONES --- */
 .actions {
     display: flex;
     align-items: center;
@@ -238,4 +235,121 @@ p.message {
     padding: 0;
     box-shadow: none;
     background: none;
+}
+
+.login-body {
+    background-color: #888d9bff; /* Fondo oscuro base */
+
+    background-image: url("data:image/svg+xml,%3Csvg width='400' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='50' y='150' font-family='Arial, sans-serif' font-size='50' font-weight='bold' fill='%23333333' opacity='0.4' transform='rotate(-25 150 150)'%3ECENTRO%3C/text%3E%3C/svg%3E");
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.login-container {
+    max-width: 400px;
+    width: 100%;
+    padding: 20px;
+}
+
+.login-card {
+    background-color: #1e1e1e;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    color: #e0e0e0;
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo-container h2 {
+    color: #ffffff;
+    margin: 10px 0 0 0;
+}
+
+.login-card .alert {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.login-card label {
+    color: #bbbbbb;
+}
+
+.login-card input {
+    background-color: #333333;
+    border: 1px solid #555555;
+    color: #ffffff;
+}
+
+.login-card input:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.login-card button {
+    background-color: #007bff;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.login-card button:hover {
+    background-color: #0056b3;
+}
+
+.logout-btn {
+    background-color: #dc3545;
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 25px;
+    color: #007bff; /* Color azul para que sea visible */
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* --- NUEVOS ESTILOS PARA LA TABLA DE REPORTE DETALLADO --- */
+.table-container .asesor-header {
+    background-color: #e9ecef; /* Un gris claro para resaltar el asesor */
+    color: #333;
+    font-size: 1.1em;
+}
+
+.table-container .detalle-dia td:first-child {
+    border: none; /* Oculta el borde de la primera celda para la sangría */
+}
+
+.table-container .detalle-dia {
+    background-color: #f8f9fa; /* Un fondo muy sutil para las filas de detalle */
+}
+
+.table-container tfoot .total-general {
+    background-color: #343a40; /* Fondo oscuro para el total general */
+    color: white;
+    font-size: 1.2em;
+    text-align: right;
+}
+
+.table-container tfoot .total-general th {
+    text-align: right;
+    padding-right: 10px;
+}
+.table-container tfoot .total-general th:first-child {
+    text-align: left;
 }

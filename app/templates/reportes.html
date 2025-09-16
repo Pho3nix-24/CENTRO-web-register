@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Reporte de Ventas{% endblock %}
+
+{% block content %}
+    <h2>Reporte de Ventas</h2>
+
+    {% if reporte %}
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Asesor</th>
+                        <th>Fecha</th>
+                        <th>N° de Ventas (Día)</th>
+                        <th>Total Vendido (Día)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for asesor, data in reporte %}
+                        <tr class="asesor-header">
+                            <td colspan="2"><strong>{{ asesor }}</strong></td>
+                            <td><strong>{{ data.registros_asesor }} (Total)</strong></td>
+                            <td><strong>S/ {{ "%.2f"|format(data.total_asesor) }} (Total)</strong></td>
+                        </tr>
+                        {% for fecha, detalles_dia in data.fechas.items() %}
+                        <tr class="detalle-dia">
+                            <td></td> <td>{{ fecha }}</td>
+                            <td>{{ detalles_dia.registros_dia }}</td>
+                            <td>S/ {{ "%.2f"|format(detalles_dia.total_dia) }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="total-general">
+                        <th colspan="2">TOTAL GENERAL</th>
+                        <th>{{ total_registros }}</th>
+                        <th>S/ {{ "%.2f"|format(total_ventas) }}</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    {% else %}
+        <p class="message">No hay datos suficientes para generar un reporte.</p>
+    {% endif %}
+{% endblock %}

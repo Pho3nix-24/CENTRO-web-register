@@ -32,6 +32,7 @@ def agregar_registro(data: dict):
     ws.append(fila)
     wb.save(EXCEL_FILE)
 
+#Verificar DNI y N° de Operación duplicados
 def verificar_duplicado(dni_nuevo, num_operacion_nuevo):
     if not os.path.exists(EXCEL_FILE):
         return None
@@ -99,3 +100,64 @@ def _format_cell_value(value):
     if isinstance(value, (datetime, date)):
         return value.strftime("%Y-%m-%d")
     return str(value)
+
+
+# --- GENERAR REPORTE DE VENTAS ---
+def generar_reporte_asesores():
+    """
+    Procesa el archivo Excel para generar un reporte detallado de ventas 
+    por asesor y por fecha.
+    """
+    if not os.path.exists(EXCEL_FILE):
+        return {}
+
+    wb = load_workbook(EXCEL_FILE)
+    ws = wb.active
+    
+    reporte = {}
+    asesor_col_idx = FIELDS.index("asesor")
+    cuota_col_idx = FIELDS.index("cuota")
+    fecha_col_idx = FIELDS.index("fecha")
+
+    for row in ws.iter_rows(min_row=2, values_only=True):
+        if len(row) <= max(asesor_col_idx, cuota_col_idx, fecha_col_idx):
+            continue
+
+        asesor_nombre = str(row[asesor_col_idx] or "Sin Asesor").strip()
+        fecha_valor = row[fecha_col_idx]
+
+        # Formatear la fecha a un string 'YYYY-MM-DD'
+        if isinstance(fecha_valor, datetime):
+            fecha_str = fecha_valor.strftime('%Y-%m-%d')
+        elif isinstance(fecha_valor, str) and fecha_valor:
+            fecha_str = fecha_valor
+        else:
+            continue # Ignorar filas sin fecha válida
+
+        try:
+            cuota_valor = float(row[cuota_col_idx])
+        except (ValueError, TypeError):
+            continue
+
+        # Inicializar asesor si no existe
+        if asesor_nombre not in reporte:
+            reporte[asesor_nombre] = {
+                'fechas': {},
+                'total_asesor': 0.0,
+                'registros_asesor': 0
+            }
+
+        # Inicializar fecha para el asesor si no existe
+        if fecha_str not in reporte[asesor_nombre]['fechas']:
+            reporte[asesor_nombre]['fechas'][fecha_str] = {
+                'total_dia': 0.0,
+                'registros_dia': 0
+            }
+        
+        # Acumular datos
+        reporte[asesor_nombre]['fechas'][fecha_str]['total_dia'] += cuota_valor
+        reporte[asesor_nombre]['fechas'][fecha_str]['registros_dia'] += 1
+        reporte[asesor_nombre]['total_asesor'] += cuota_valor
+        reporte[asesor_nombre]['registros_asesor'] += 1
+            
+    return reporte
