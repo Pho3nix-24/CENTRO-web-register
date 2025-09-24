@@ -3,7 +3,17 @@
 {% block title %}Reporte de Ventas{% endblock %}
 
 {% block content %}
-    <h2>Reporte de Ventas</h2>
+    <h2>Reporte de Ventas por Asesor</h2>
+
+    <div class="report-controls">
+        <form method="GET" action="{{ url_for('reportes') }}" class="date-filter-form">
+            <label for="start_date">Desde:</label>
+            <input type="date" id="start_date" name="start_date" value="{{ start_date or '' }}">
+            <label for="end_date">Hasta:</label>
+            <input type="date" id="end_date" name="end_date" value="{{ end_date or '' }}">
+            <button type="submit">Filtrar</button>
+        </form>
+    </div>
 
     {% if reporte %}
         <div class="table-container">
@@ -11,37 +21,52 @@
                 <thead>
                     <tr>
                         <th>Asesor</th>
-                        <th>Fecha</th>
-                        <th>N° de Ventas (Día)</th>
-                        <th>Total Vendido (Día)</th>
+                        <th>N° de Registros</th>
+                        <th>Subtotal de Ventas (S/)</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for asesor, data in reporte %}
-                        <tr class="asesor-header">
-                            <td colspan="2"><strong>{{ asesor }}</strong></td>
-                            <td><strong>{{ data.registros_asesor }} (Total)</strong></td>
-                            <td><strong>S/ {{ "%.2f"|format(data.total_asesor) }} (Total)</strong></td>
+                        <tr>
+                            <td>{{ asesor }}</td>
+                            <td>{{ data.registros_asesor }}</td>
+                            <td>S/ {{ "%.2f"|format(data.total_asesor) }}</td>
                         </tr>
-                        {% for fecha, detalles_dia in data.fechas.items() %}
-                        <tr class="detalle-dia">
-                            <td></td> <td>{{ fecha }}</td>
-                            <td>{{ detalles_dia.registros_dia }}</td>
-                            <td>S/ {{ "%.2f"|format(detalles_dia.total_dia) }}</td>
-                        </tr>
-                        {% endfor %}
                     {% endfor %}
                 </tbody>
                 <tfoot>
+    <!--           <tr class="subtotal-pagina">
+                        <th>Subtotal en esta página</th>
+                        <th>{{ page_total_registros }}</th>
+                        <th>S/ {{ "%.2f"|format(page_total_ventas) }}</th>
+                    </tr> -->
                     <tr class="total-general">
-                        <th colspan="2">TOTAL GENERAL</th>
+                        <th>TOTAL GENERAL</th>
                         <th>{{ total_registros }}</th>
                         <th>S/ {{ "%.2f"|format(total_ventas) }}</th>
                     </tr>
                 </tfoot>
             </table>
         </div>
+
+        <div class="pagination">
+            {% if page > 1 %}
+                <a href="{{ url_for('reportes', page=page - 1, start_date=start_date, end_date=end_date) }}" class="page-link">Anterior</a>
+            {% else %}
+                <span class="page-link disabled">Anterior</span>
+            {% endif %}
+            
+            <span class="page-info">Página {{ page }} de {{ total_pages }}</span>
+            
+            {% if page < total_pages %}
+                <a href="{{ url_for('reportes', page=page + 1, start_date=start_date, end_date=end_date) }}" class="page-link">Siguiente</a>
+            {% else %}
+                <span class="page-link disabled">Siguiente</span>
+            {% endif %}
+        </div>
+        
     {% else %}
         <p class="message">No hay datos suficientes para generar un reporte.</p>
     {% endif %}
+
 {% endblock %}

@@ -4,7 +4,7 @@
 
 {% block content %}
     <h2>Actualizar Historial de Pago</h2>
-    <form method="POST" action="{{ url_for('actualizar_pago', fila_idx=fila_idx, query=query) }}">
+    <form method="POST" action="{{ url_for('actualizar_pago', id=id, query=query) }}">
         
         <a href="{{ url_for('consulta', query=query) }}" class="back-link">← Volver a la consulta</a>
 

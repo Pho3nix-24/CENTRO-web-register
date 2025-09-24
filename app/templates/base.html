@@ -4,15 +4,27 @@
     <meta charset="UTF-8" />
     <title>{% block title %}Registro Docente{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/logo.png') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/icon.png') }}">
 </head>
 <body>
     <div class="header">
+    <div class="header-nav">
         <a href="{{ url_for('index') }}">Registrar</a>
         <a href="{{ url_for('consulta') }}">Consultar</a>
-        <a href="{{ url_for('reportes') }}">Reportes</a> <a href="{{ url_for('descargar') }}">Descargar Excel</a>
+        <a href="{{ url_for('reportes') }}">Reportes</a>
+        <a href="{{ url_for('descargar') }}">Descargar Excel</a>
+        {% if session.get('username') == 'admin' %}
+        <a href="{{ url_for('auditoria') }}">Auditoría</a>
+    {% endif %}
+    </div>
+
+    <div class="header-user-info">
+        {% if session.username %}
+            <span class="user-greeting">🫡 Hola, {{ session.full_name }}!</span>
+        {% endif %}
         <a href="{{ url_for('logout') }}" class="logout-btn">Cerrar Sesión</a>
     </div>
+</div>
     
     <div class="content">
         {% with messages = get_flashed_messages(with_categories=true) %}

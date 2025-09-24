@@ -9,7 +9,9 @@
 
         {% for label, field in labels_and_fields %}
             <label>{{ label }}</label>
-            {# ... (el resto de la lógica del formulario no cambia) ... #}
+            
+            {# --- Lógica para mostrar el campo correcto según el tipo --- #}
+            
             {% if field == 'especialidad' %}
                 <select name="{{ field }}" required>
                     <option value="">Seleccione una especialidad</option>
@@ -22,6 +24,7 @@
                     <option value="Inicial" {% if data[field]=='Inicial' %}selected{% endif %}>Inicial</option>
                     <option value="Primaria" {% if data[field]=='Primaria' %}selected{% endif %}>Primaria</option>
                 </select>
+
             {% elif field == 'modalidad' %}
                 <select name="{{ field }}" required>
                     <option value="">Seleccione</option>
@@ -32,6 +35,7 @@
                     <option value="Maratón" {% if data[field]=='Maratón' %}selected{% endif %}>Maratón</option>
                     <option value="Maratón + Ascenso" {% if data[field]=='Maratón + Ascenso' %}selected{% endif %}>Maratón + Ascenso</option>
                 </select>
+
             {% elif field == 'destino' %}
                 <select name="{{ field }}">
                     <option value="">Seleccione un destino</option>
@@ -40,13 +44,15 @@
                     <option value="CECP" {% if data[field]=='CECP' %}selected{% endif %}>CECP</option>
                     <option value="Keila" {% if data[field]=='Keila' %}selected{% endif %}>Keila</option>
                 </select>
-            {% elif field == 'tipo_cuota' %}
+
+            {% elif field == 'tipo_de_cuota' %}
                 <select name="{{ field }}" required>
                     <option value="">Seleccione</option>
-                    <option value="1" {% if data[field]=='1' %}selected{% endif %}>1</option>
-                    <option value="2" {% if data[field]=='2' %}selected{% endif %}>2</option>
-                    <option value="Completo" {% if data[field]=='Completo' %}selected{% endif %}>Completo</option>
+                    <option value="1" {% if data[field]|string == '1' %}selected{% endif %}>1</option>
+                    <option value="2" {% if data[field]|string == '2' %}selected{% endif %}>2</option>
+                    <option value="Completo" {% if data[field]|string == 'Completo' %}selected{% endif %}>Completo</option>
                 </select>
+
             {% elif field == 'genero' %}
                 <select name="{{ field }}" required>
                     <option value="">Seleccione</option>
@@ -54,16 +60,22 @@
                     <option value="Femenino" {% if data[field]=='Femenino' %}selected{% endif %}>F</option>
                     <option value="Otro" {% if data[field]=='Otro' %}selected{% endif %}>Otro</option>
                 </select>
+                
             {% elif field == 'fecha' %}
-                <input type="date" name="{{ field }}" value="{{ data[field] or '' }}">
+                <input type="date" name="{{ field }}" value="{{ data[field].strftime('%Y-%m-%d') if data[field] else '' }}">
+
             {% elif field == 'cuota' %}
                 <input type="number" step="0.01" name="{{ field }}" value="{{ data[field] or '' }}">
+
             {% elif field == 'correo' %}
                 <input type="email" name="{{ field }}" value="{{ data[field] or '' }}">
+                
             {% else %}
                 <input type="text" name="{{ field }}" value="{{ data[field] or '' }}">
+
             {% endif %}
         {% endfor %}
+
         <input type="hidden" name="query" value="{{ query }}">
         <button type="submit">Guardar Cambios</button>
     </form>

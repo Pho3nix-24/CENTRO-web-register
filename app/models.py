@@ -18,6 +18,7 @@ FIELDS = [
 ]
 
 def init_excel():
+    """Crea el archivo Excel con encabezados si no existe."""
     if not os.path.exists(EXCEL_FILE):
         wb = Workbook()
         ws = wb.active
@@ -25,6 +26,7 @@ def init_excel():
         wb.save(EXCEL_FILE)
 
 def agregar_registro(data: dict):
+    """Agrega una nueva fila de datos al archivo Excel."""
     init_excel()
     wb = load_workbook(EXCEL_FILE)
     ws = wb.active
@@ -32,8 +34,11 @@ def agregar_registro(data: dict):
     ws.append(fila)
     wb.save(EXCEL_FILE)
 
-#Verificar DNI y N° de Operación duplicados
 def verificar_duplicado(dni_nuevo, num_operacion_nuevo):
+    """
+    Verifica si un DNI o N° de Operación ya existe en el Excel.
+    Devuelve un mensaje de error si se encuentra un duplicado, o None si no hay.
+    """
     if not os.path.exists(EXCEL_FILE):
         return None
     wb = load_workbook(EXCEL_FILE)
@@ -52,6 +57,7 @@ def verificar_duplicado(dni_nuevo, num_operacion_nuevo):
     return None
 
 def buscar_registros(query):
+    """Busca registros por DNI o nombre de cliente."""
     resultados = []
     if not query or not os.path.exists(EXCEL_FILE):
         return resultados
@@ -69,8 +75,6 @@ def obtener_datos_fila(fila_idx):
     wb = load_workbook(EXCEL_FILE)
     ws = wb.active
     fila_valores = [ws.cell(row=fila_idx, column=col).value for col in range(1, len(FIELDS) + 1)]
-    
-    # --- ESTA LÍNEA ESTABA INCORRECTA Y HA SIDO CORREGIDA ---
     data = {field: _format_cell_value(val) for field, val in zip(FIELDS, fila_valores)}
     return data
 
@@ -101,16 +105,30 @@ def _format_cell_value(value):
         return value.strftime("%Y-%m-%d")
     return str(value)
 
-
-# --- GENERAR REPORTE DE VENTAS ---
-def generar_reporte_asesores():
+# La función de reporte ahora acepta fechas como parámetros
+def generar_reporte_asesores(start_date_str=None, end_date_str=None):
     """
     Procesa el archivo Excel para generar un reporte detallado de ventas 
-    por asesor y por fecha.
+    por asesor, aplicando un filtro de fechas si se proporciona.
     """
     if not os.path.exists(EXCEL_FILE):
         return {}
-
+    
+    # Convertir fechas de string a objetos datetime
+    start_date = None
+    if start_date_str:
+        try:
+            start_date = datetime.strptime(start_date_str, '%Y-%m-%d')
+        except ValueError:
+            pass # Ignorar si el formato es incorrecto
+    
+    end_date = None
+    if end_date_str:
+        try:
+            end_date = datetime.strptime(end_date_str, '%Y-%m-%d')
+        except ValueError:
+            pass
+        
     wb = load_workbook(EXCEL_FILE)
     ws = wb.active
     
@@ -126,37 +144,34 @@ def generar_reporte_asesores():
         asesor_nombre = str(row[asesor_col_idx] or "Sin Asesor").strip()
         fecha_valor = row[fecha_col_idx]
 
-        # Formatear la fecha a un string 'YYYY-MM-DD'
+        # Validar la fecha para el filtro
         if isinstance(fecha_valor, datetime):
-            fecha_str = fecha_valor.strftime('%Y-%m-%d')
-        elif isinstance(fecha_valor, str) and fecha_valor:
-            fecha_str = fecha_valor
+            current_date = fecha_valor
+        elif isinstance(fecha_valor, str):
+            try:
+                current_date = datetime.strptime(fecha_valor, '%Y-%m-%d')
+            except ValueError:
+                continue
         else:
-            continue # Ignorar filas sin fecha válida
+            continue
+        
+        # Aplicar el filtro de fechas
+        if start_date and current_date < start_date:
+            continue
+        if end_date and current_date > end_date:
+            continue
 
         try:
             cuota_valor = float(row[cuota_col_idx])
         except (ValueError, TypeError):
             continue
 
-        # Inicializar asesor si no existe
         if asesor_nombre not in reporte:
             reporte[asesor_nombre] = {
-                'fechas': {},
                 'total_asesor': 0.0,
                 'registros_asesor': 0
             }
 
-        # Inicializar fecha para el asesor si no existe
-        if fecha_str not in reporte[asesor_nombre]['fechas']:
-            reporte[asesor_nombre]['fechas'][fecha_str] = {
-                'total_dia': 0.0,
-                'registros_dia': 0
-            }
-        
-        # Acumular datos
-        reporte[asesor_nombre]['fechas'][fecha_str]['total_dia'] += cuota_valor
-        reporte[asesor_nombre]['fechas'][fecha_str]['registros_dia'] += 1
         reporte[asesor_nombre]['total_asesor'] += cuota_valor
         reporte[asesor_nombre]['registros_asesor'] += 1
             
